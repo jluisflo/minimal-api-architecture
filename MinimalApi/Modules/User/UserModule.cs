@@ -17,21 +17,24 @@ public class UserModule : CarterModule
     {
         app.MapGet("/", (IUserRepository userRepository) => userRepository.GetAll());
         app.MapGet("/{id}", (int id, IUserRepository userRepository) => userRepository.GetById(id));
-        app.MapPost("/", async (SaveUserDto newUser, HttpContext ctx, IUserRepository userRepository) =>
-        {
-            var result = ctx.Request.Validate(newUser);
-            if (!result.IsValid)
-            {
-                return Results.UnprocessableEntity(result.GetFormattedErrors());
-            }
-            var user = newUser.Adapt<Data.Models.User>();
-            await userRepository.Save(user);
-            return Results.Ok("User saved successfully");
-        });
-        app.MapDelete("/{id}", async (int id, IUserRepository userRepository) =>
-        {
-            await userRepository.Delete(new Data.Models.User { Id = id });
-            return Results.Ok("User deleted successfully");
-        });
+        app.MapPost("/", HandlePost);
+        app.MapDelete("/{id}", HandleDelete);
+    }
+
+    async Task<IResult> HandlePost(AddUserDto newUser, HttpContext ctx, IUserRepository userRepository)
+    {
+        var result = ctx.Request.Validate(newUser);
+        if (!result.IsValid)
+            return Results.UnprocessableEntity(result.GetValidationProblems());
+
+        var user = newUser.Adapt<Data.Models.User>();
+        await userRepository.Save(user);
+        return Results.Ok("User saved successfully");
+    }
+
+    async Task<IResult> HandleDelete(int id, IUserRepository userRepository)
+    {
+        await userRepository.Delete(new Data.Models.User { Id = id });
+        return Results.Ok("User deleted successfully");
     }
 }
