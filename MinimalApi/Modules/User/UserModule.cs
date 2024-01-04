@@ -1,8 +1,5 @@
 using Carter;
-using Carter.ModelBinding;
-using Mapster;
-using MinimalApi.Data.Repositories.Interfaces;
-using MinimalApi.Modules.User.Dtos;
+using MinimalApi.Modules.User.Handlers;
 
 namespace MinimalApi.Modules.User;
 
@@ -15,26 +12,9 @@ public class UserModule : CarterModule
 
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/", (IUserRepository userRepository) => userRepository.GetAll());
-        app.MapGet("/{id}", (int id, IUserRepository userRepository) => userRepository.GetById(id));
-        app.MapPost("/", HandlePost);
-        app.MapDelete("/{id}", HandleDelete);
-    }
-
-    async Task<IResult> HandlePost(AddUserDto newUser, HttpContext ctx, IUserRepository userRepository)
-    {
-        var result = ctx.Request.Validate(newUser);
-        if (!result.IsValid)
-            return Results.UnprocessableEntity(result.GetValidationProblems());
-
-        var user = newUser.Adapt<Data.Models.User>();
-        await userRepository.Save(user);
-        return Results.Ok("User saved successfully");
-    }
-
-    async Task<IResult> HandleDelete(int id, IUserRepository userRepository)
-    {
-        await userRepository.Delete(new Data.Models.User { Id = id });
-        return Results.Ok("User deleted successfully");
+        app.MapGet("/", GetAllUsers.Handle);
+        app.MapGet("/{id:int}", GetUser.Handle);
+        app.MapPost("/", SaveUser.Handle);
+        app.MapDelete("/{id:int}", DeleteUser.Handle);
     }
 }
