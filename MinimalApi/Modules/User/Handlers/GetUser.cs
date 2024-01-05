@@ -4,8 +4,15 @@ namespace MinimalApi.Modules.User.Handlers;
 
 public static class GetUser
 {
-    public static Task<Data.Models.User> Handle(int id, IUserRepository userRepository)
+    public static async Task<IResult> Handle(int id, IUserRepository userRepository)
     {
-        return userRepository.GetById(id);
+        var exists = await userRepository.Exists(id);
+        if (!exists)
+        {
+            return Results.BadRequest(new { Message = "User not found" });
+        }
+
+        var user = await userRepository.GetById(id);
+        return Results.Ok(user);
     }
 }

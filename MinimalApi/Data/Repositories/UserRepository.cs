@@ -28,4 +28,6 @@ public class UserRepository : IUserRepository
         _context.Users!.Remove(user);
         return _context.SaveChangesAsync();
     }
+    
+    public Task<bool> Exists(int id) => _context.Users!.AnyAsync(u => u.Id.Equals(id));
 }

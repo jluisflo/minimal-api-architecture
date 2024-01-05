@@ -19,7 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-// Configure modules
+// Configure application modules
 app.UseUserModule();
 
 // Configure the HTTP request pipeline.

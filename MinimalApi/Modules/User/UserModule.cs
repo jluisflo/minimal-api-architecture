@@ -7,10 +7,12 @@ public static class UserModule
 {
     public static void UseUserModule(this WebApplication app)
     {
-        var mapGroup = app.MapGroup("/users").WithOpenApi();
+        var mapGroup = app.MapGroup("/users")
+            .AddFluentValidationAutoValidation()
+            .WithOpenApi();
         mapGroup.MapGet("/", GetAllUsers.Handle);
         mapGroup.MapGet("/{id:int}", GetUser.Handle);
-        mapGroup.MapPost("/", AddUser.Handle).AddFluentValidationAutoValidation();
+        mapGroup.MapPost("/", AddUser.Handle);
         mapGroup.MapDelete("/{id:int}", DeleteUser.Handle);
     }
 }

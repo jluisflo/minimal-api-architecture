@@ -8,4 +8,5 @@ public interface IUserRepository
     public Task<User> GetById(int id);
     public Task Save(User user);
     public Task Delete(User id);
+    public Task<bool> Exists(int id);
 }
