@@ -1,20 +1,16 @@
-using Carter;
 using MinimalApi.Modules.User.Handlers;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace MinimalApi.Modules.User;
 
-public class UserModule : CarterModule
+public static class UserModule
 {
-    public UserModule() : base(basePath: "users")
+    public static void UseUserModule(this WebApplication app)
     {
-        IncludeInOpenApi();
-    }
-
-    public override void AddRoutes(IEndpointRouteBuilder app)
-    {
-        app.MapGet("/", GetAllUsers.Handle);
-        app.MapGet("/{id:int}", GetUser.Handle);
-        app.MapPost("/", SaveUser.Handle);
-        app.MapDelete("/{id:int}", DeleteUser.Handle);
+        var mapGroup = app.MapGroup("/users").WithOpenApi();
+        mapGroup.MapGet("/", GetAllUsers.Handle);
+        mapGroup.MapGet("/{id:int}", GetUser.Handle);
+        mapGroup.MapPost("/", AddUser.Handle).AddFluentValidationAutoValidation();
+        mapGroup.MapDelete("/{id:int}", DeleteUser.Handle);
     }
 }

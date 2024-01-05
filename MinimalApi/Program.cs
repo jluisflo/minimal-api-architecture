@@ -1,21 +1,25 @@
-using Carter;
+using System.Reflection;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Data.Repositories;
 using MinimalApi.Data.Repositories.Interfaces;
+using MinimalApi.Modules.User;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 using AppContext = MinimalApi.Data.AppContext;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddCarter();
 builder.Services.AddDbContext<AppContext>(options => options.UseInMemoryDatabase(databaseName: "users"));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+// Configure modules
+app.UseUserModule();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -25,5 +29,4 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapCarter();
 app.Run();
