@@ -1,3 +1,4 @@
+using MinimalApi.Commons.Filters;
 using MinimalApi.Modules.User.Handlers;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
@@ -9,7 +10,8 @@ public static class UserModule
     {
         var mapGroup = app.MapGroup("/users")
             .AddFluentValidationAutoValidation()
-            .WithOpenApi();
+            .WithOpenApi()
+            .AddEndpointFilter<ApiKeyFilter>();
         mapGroup.MapGet("/", GetAllUsers.Handle);
         mapGroup.MapGet("/{id:int}", GetUser.Handle);
         mapGroup.MapPost("/", AddUser.Handle);
