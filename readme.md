@@ -33,6 +33,16 @@ The API includes the following endpoints:
 
 You can test these endpoints using a tool like Postman, or by using the included Swagger UI at `https://localhost:5001/swagger`.
 
+## API Key Validation
+
+This project uses an API key for authentication. The API key should be included in the header of each request with the key `X-API-KEY`.
+
+The project includes a middleware that checks for the presence and validity of the API key in the request headers. If the API key is not provided or is invalid, the middleware returns a 401 Unauthorized status code. If the API key is valid, the request is allowed to proceed.
+
+To configure the API key, you can set it in the `appsettings.json` file under the `ApiKeys` section.
+
+To use the API key in Swagger, click the "Authorize" button in the Swagger UI and enter your API key. Swagger will include the `X-API-KEY` header in all requests.
+
 ## Contributing
 
 This project is not currently accepting contributions.
