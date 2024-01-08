@@ -3,11 +3,7 @@ using MinimalApi.Data.Models;
 
 namespace MinimalApi.Data;
 
-public class AppContext : DbContext
+public class AppContext(DbContextOptions<AppContext> options) : DbContext(options)
 {
-    public AppContext(DbContextOptions<AppContext> options) : base(options)
-    {
-    }
-
     public DbSet<User>? Users { get; set; }
 }
