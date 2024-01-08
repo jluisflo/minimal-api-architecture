@@ -1,3 +1,5 @@
+![image](https://github.com/jluisflo/minimal-api-architecture/assets/77704331/eaf50219-e083-4219-985c-b5dcaf4a1ead)
+
 # Minimal API Project
 
 This is a minimal API project built with .NET 8.0 and C#. It uses a module-based structure with separate handlers for each operation.
